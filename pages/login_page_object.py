@@ -22,6 +22,7 @@ class LoginComponent(Component):
     EMAIL_FIELD = '//input[@name="login"]'
     PASSWORD_FIELD = '//input[@name="password"]'
     SUBMIT = '//input[@class="form-login__submit button-primary"]'
+    ERRORS_FIELD = '//div[@class="login-page__errors"]'
 
     def set_email_field(self, email):
         element = WebDriverWait(self.driver, self.TIMEOUT, self.UPDATE).until(
@@ -40,3 +41,7 @@ class LoginComponent(Component):
             EC.element_to_be_clickable((By.XPATH, self.SUBMIT))
         ).click()
 
+    def check_error_message(self, expected_error_message):
+        return WebDriverWait(self.driver, self.TIMEOUT, self.UPDATE).until(
+            EC.text_to_be_present_in_element((By.XPATH, self.ERRORS_FIELD), expected_error_message)
+        )

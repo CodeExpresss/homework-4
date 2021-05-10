@@ -1,4 +1,4 @@
-#!/home/daniil/Desktop/homework-4/virtualenv/bin/python
+#!/home/nick/PycharmProjects/homework-4/virtualenv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
