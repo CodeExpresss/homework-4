@@ -18,27 +18,19 @@ class ProfilePage(Page):
     def click_subscribe(self):
         return self.profile_component.click_subscribe()
 
-    def click_subscribers(self):
-        return self.profile_component.click_subscribers()
+    def click_unsubscribe(self):
+        return self.profile_component.click_unsubscribe()
 
-    def click_subscriptions(self):
-        return self.profile_component.click_subscriptions()
+    def is_subscribed(self):
+        return self.profile_component.is_subscribed()
 
-    def is_subscribed(self, username):
-        return self.profile_component.is_subscribed_or_subscription(username)
-
-    def is_subscription(self, username):
-        return self.profile_component.is_subscribed_or_subscription(username)
+    def is_unsubscribed(self):
+        return self.profile_component.is_unsubscribed()
 
 
 class ProfileComponent(Component):
     PROFILE_NAME = '//div[@class="profile-page__header-username"]'
     BUTTON_SUBSCRIBE = '//div[@class="profile-page__follow button-primary"]'
-    BUTTON_SUBSCRIBERS = '//div[@class="profile-page__toggle-item", @data-class="profile-page__item_subscribers"]'
-    BUTTON_SUBSCRIPTIONS = '//div[@class="profile-page__toggle-item", @data-class="profile-page__item_subscriptions"]'
-    # DIV_SUBSCRIPTIONS = '//div[@class="profile-page__item profile-page__item_subscriptions profile-page__item_active"]'
-    USER_LINK1 = '//a[@class="user-item", @href="/profile/'
-    USER_LINK2 = '"]'
 
     def get_user_name(self):
         return WebDriverWait(self.driver, self.TIMEOUT, self.UPDATE).until(
@@ -50,17 +42,21 @@ class ProfileComponent(Component):
             EC.presence_of_element_located((By.XPATH, self.BUTTON_SUBSCRIBE))
         ).click()
 
-    def click_subscribers(self):
-        return WebDriverWait(self.driver, self.TIMEOUT, self.UPDATE).until(
-            EC.presence_of_element_located((By.XPATH, self.BUTTON_SUBSCRIBERS))
-        ).click()
+    def click_unsubscribe(self):
+        return self.click_subscribe()
 
-    def click_subscriptions(self):
+    def is_subscribed(self):
+        WebDriverWait(self.driver, self.TIMEOUT, self.UPDATE).until(
+            EC.presence_of_element_located((By.XPATH, self.BUTTON_SUBSCRIBE))
+        )
         return WebDriverWait(self.driver, self.TIMEOUT, self.UPDATE).until(
-            EC.presence_of_element_located((By.XPATH, self.BUTTON_SUBSCRIPTIONS))
-        ).click()
+            EC.text_to_be_present_in_element((By.XPATH, self.BUTTON_SUBSCRIBE), 'Отписаться')
+        )
 
-    def is_subscribed_or_subscription(self, username):
+    def is_unsubscribed(self):
+        WebDriverWait(self.driver, self.TIMEOUT, self.UPDATE).until(
+            EC.presence_of_element_located((By.XPATH, self.BUTTON_SUBSCRIBE))
+        )
         return WebDriverWait(self.driver, self.TIMEOUT, self.UPDATE).until(
-            EC.presence_of_element_located((By.XPATH, self.USER_LINK1 + username + self.USER_LINK2))
+            EC.text_to_be_present_in_element((By.XPATH, self.BUTTON_SUBSCRIBE), 'Подписаться')
         )
